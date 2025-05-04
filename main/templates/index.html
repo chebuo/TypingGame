@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>早口言葉タイピング</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 2rem; }
+        #target { font-size: 1.5rem; margin: 1rem 0; }
+        #input { font-size: 1.2rem; width: 80%; padding: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>早口言葉タイピング練習</h1>
+    <div id="target">読み込み中...</div>
+    <input type="text" id="input" placeholder="ここにタイプしてね！">
+    <div id="result"></div>
+
+    <script>
+        let currentWord = '';
+
+        function loadWord() {
+            fetch('/api/words')
+                .then(response => response.json())
+                .then(data => {
+                    currentWord = data[Math.floor(Math.random() * data.length)];
+                    document.getElementById('target').innerText = currentWord;
+                    document.getElementById('input').value = '';
+                    document.getElementById('result').innerText = '';
+                });
+        }
+
+        document.getElementById('input').addEventListener('input', function () {
+            const typed = this.value;
+            if (typed === currentWord) {
+                document.getElementById('result').innerText = '正解！🎉';
+                setTimeout(loadWord, 1500);
+            }
+        });
+
+        loadWord();
+    </script>
+</body>
+</html>
