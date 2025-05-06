@@ -12,14 +12,32 @@ def get_words():
 
     # 早口言葉を抽出し、<br>などで改行されているものを個別に分割
     quotes = soup.find_all('div', class_='col-lg-12 col-md-12 col-12 mb-2')
-    
+    easy=[]
+    nomal=[]
+    hard=[]
+    veryhard=[]
+    for q in quotes:
+        text=q.get_text(separator='/n',strip=True)
+        if '難易度1' in text:
+            easy.append(text)
+        elif '難易度2' in text:
+            nomal.append(text)
+        elif '難易度3' in text:
+            hard.append(text)
+        elif '難易度4' in text:
+            veryhard.append(text)
+        elif '難易度5' in text:
+            veryhard.append(text)
     words = [
         line
-        for q in quotes
-        for line in q.get_text(separator='\n', strip=True).split('\n')
+        for q in easy
+        for line in q.split('/n')
+        if '難易度1' not in line
         if line  # 空行を除外
     ]
-    
+    print(text)
+    print()
+    print(easy)
     return jsonify(words)
 
 @app.route('/')
